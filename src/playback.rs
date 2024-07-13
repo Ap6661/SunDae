@@ -9,6 +9,7 @@ pub static PLAYBACK: Singleton<Playback> = Singleton::new(Playback::new);
 pub struct Playback {
     _stream: OutputStream,
     sink: Sink,
+    playback_running: bool,
 }
 
 impl Playback {
@@ -21,6 +22,7 @@ impl Playback {
         Playback {
             _stream: stream,
             sink,
+            playback_running: false,
         }
     }
 
@@ -43,8 +45,6 @@ impl Playback {
     }
 
     pub fn play(&self) {
-        let prev = STATUS.get().playing;
-
         STATUS.mutate( | s: &mut slib::Status | {
             if !s.playing
             {
@@ -53,7 +53,10 @@ impl Playback {
             }
         });
 
-        if !prev {
+        if !self.playback_running {
+            PLAYBACK.mutate( | p: &mut Playback | {
+                p.playback_running = true;
+            });
             playback();
         }
     }
@@ -123,6 +126,10 @@ fn playback() {
                 s.current_song = None;
                 s.playing = false;
                 PLAYBACK.get().sink.stop();
+            });
+
+            PLAYBACK.mutate( | p: &mut Playback | {
+                p.playback_running = false;
             });
     });
 }
