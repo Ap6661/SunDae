@@ -1,0 +1,17 @@
+[package]
+name = "sundae"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+confy = "0.6.1"
+md5 = "0.7.0"
+reqwest = { version = "0.12.4", features = ["blocking"] }
+rodio = "0.18.0"
+serde = { version = "1.0.201", features = ["derive"] }
+
+slib = { git = "https://github.com/ap6661/slib" }
+subsonic-types = "0.2.0"
+tempfile = "3.10.1"
