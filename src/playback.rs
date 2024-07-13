@@ -2,7 +2,7 @@ use std::thread;
 
 use rodio::{Decoder, OutputStream, Sink};
 use slib::Item;
-use crate::{singleton::Singleton, songmanager::SONGMANAGER, status::STATUS};
+use crate::{config::CONFIG, singleton::Singleton, songmanager::SONGMANAGER, status::STATUS};
 
 pub static PLAYBACK: Singleton<Playback> = Singleton::new(Playback::new);
 
@@ -117,6 +117,14 @@ fn playback() {
                 let f = Decoder::new(SONGMANAGER.get().get_song(current_song)).unwrap();
                 PLAYBACK.get().sink.append(f);
             });
+
+            for i in 0..CONFIG.get().config.preload as usize {
+                if i < STATUS.get().queue.len() {
+                    SONGMANAGER.get().get_song(
+                        STATUS.get().queue.get(i).unwrap().clone()
+                        );
+                }
+            }
 
             // NEVER WAIT WHILE YOU HAVE A LOCK
             PLAYBACK.get().sink.sleep_until_end();

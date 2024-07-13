@@ -33,6 +33,7 @@ pub struct Config {
     pub server: String,
     pub username: String,
     pub password: String,
+    pub preload: u8,
 }
 
 impl ::std::default::Default for Config {
@@ -41,6 +42,7 @@ impl ::std::default::Default for Config {
             server: String::from("serverurl"), 
             username: String::from("USERNAME"),
             password: String::from("PASSWORD"),
+            preload: 0,
         }
     }
 
